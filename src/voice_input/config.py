@@ -36,7 +36,7 @@ MAX_CLIP_S = 14
 MIN_CLIP_S = 0.4
 
 # Whisper
-WHISPER_MODEL = os.environ.get("CLAUDE_VOICE_MODEL", "medium")
+WHISPER_MODEL = os.environ.get("CLAUDE_VOICE_MODEL", "large-v3-turbo")
 LANG = os.environ.get("CLAUDE_VOICE_LANG", "es")
 
 # Wake-word grace: after a bare wake utterance, the next VAD segment within
