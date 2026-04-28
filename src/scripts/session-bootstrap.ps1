@@ -39,13 +39,24 @@ Start-Process -WindowStyle Hidden -FilePath powershell.exe -ArgumentList @(
 ) | Out-Null
 
 # 3. Ensure STT daemon is running (single instance, shared across sessions).
+# Lock file alone is unreliable: a previous-version daemon may run with a
+# different command line, or the lock may be stale. Probe for any python /
+# pythonw process whose command line invokes voice_input or the legacy
+# voice-input.py script.
 $alreadyRunning = $false
-if (Test-Path $lockFile) {
-    $oldPid = Get-Content -LiteralPath $lockFile -ErrorAction SilentlyContinue | Select-Object -First 1
-    if ($oldPid -match '^\d+$') {
-        $proc = Get-Process -Id ([int]$oldPid) -ErrorAction SilentlyContinue
-        if ($proc) { $alreadyRunning = $true }
+$existing = Get-CimInstance Win32_Process `
+    -Filter "Name='pythonw.exe' OR Name='python.exe'" `
+    -ErrorAction SilentlyContinue |
+    Where-Object {
+        $_.CommandLine -and (
+            $_.CommandLine -match 'voice_input' -or
+            $_.CommandLine -match 'voice-input\.py'
+        )
     }
+if ($existing) {
+    $alreadyRunning = $true
+    ($existing | Select-Object -First 1).ProcessId |
+        Out-File -FilePath $lockFile -Encoding ASCII -Force
 }
 if (-not $alreadyRunning -and (Test-Path -LiteralPath $venvPy)) {
     # Run elevated so we can SendInput into elevated Claude Code instances.
