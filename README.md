@@ -23,7 +23,8 @@ Talk to multiple Claude sessions, hear their answers, route by name — all 100 
 ```powershell
 git clone https://github.com/christianpasinrey/heyclaude.git
 cd heyclaude
-.\install.ps1
+.\install.ps1            # graphical installer
+# .\install.ps1 -Cli     # text-only mode (good for CI / scripted setups)
 ```
 
 The installer:
