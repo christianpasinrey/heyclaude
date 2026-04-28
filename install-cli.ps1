@@ -22,7 +22,8 @@
 [CmdletBinding()]
 param(
     [string]$PiperVersion = '2023.11.14-2',
-    [string]$Voice = 'es_ES-davefx-medium',
+    [string]$VoiceMale   = 'es_ES-davefx-medium',
+    [string]$VoiceFemale = 'es_ES-mls_10246-low',
     [switch]$NoStyleHook
 )
 
@@ -124,32 +125,47 @@ if (-not (Test-Path -LiteralPath $piperExe)) {
     Info "Piper already present"
 }
 
-# ---- 7. Download voice model -----------------------------------------------
-$onnx = Join-Path $voicesDir "$Voice.onnx"
-$json = "$onnx.json"
-if (-not (Test-Path -LiteralPath $onnx) -or -not (Test-Path -LiteralPath $json)) {
-    # Voice slug parses as <lang>_<region>-<name>-<quality>
-    if ($Voice -notmatch '^([a-z]{2})_([A-Z]{2})-([^-]+)-([a-z_]+)$') {
+# ---- 7. Download voice models (one male, one female) -----------------------
+function Get-Voice([string]$slug) {
+    $onnx = Join-Path $voicesDir "$slug.onnx"
+    $json = "$onnx.json"
+    if ((Test-Path -LiteralPath $onnx) -and (Test-Path -LiteralPath $json)) {
+        Info "Voice $slug already present"
+        return
+    }
+    if ($slug -notmatch '^([a-z]{2})_([A-Z]{2})-([^-]+)-([a-z_]+)$') {
         Fail "Voice slug must look like 'es_ES-davefx-medium'"
     }
     $lang = $matches[1]; $region = $matches[2]; $vname = $matches[3]; $quality = $matches[4]
     $base = "https://huggingface.co/rhasspy/piper-voices/resolve/main/$lang/${lang}_$region/$vname/$quality"
-    Info "Downloading voice $Voice…"
-    Invoke-WebRequest -Uri "$base/$Voice.onnx"      -OutFile $onnx -UseBasicParsing
-    Invoke-WebRequest -Uri "$base/$Voice.onnx.json" -OutFile $json -UseBasicParsing
-    Ok "Voice $Voice downloaded"
-} else {
-    Info "Voice already present"
+    Info "Downloading voice $slug…"
+    Invoke-WebRequest -Uri "$base/$slug.onnx"      -OutFile $onnx -UseBasicParsing
+    Invoke-WebRequest -Uri "$base/$slug.onnx.json" -OutFile $json -UseBasicParsing
+    Ok "Voice $slug downloaded"
 }
+Get-Voice $VoiceMale
+Get-Voice $VoiceFemale
 
 # ---- 8. Initial state file --------------------------------------------------
 if (-not (Test-Path -LiteralPath $stateFile)) {
     @{
-        sessions   = @()
-        names_pool = @(
-            'Michael','Peter','James','Oliver','Lucas','Liam',
-            'Sarah','Emma','Sophie','Charlotte','Ava','Olivia'
+        sessions     = @()
+        male_names   = @(
+            'Michael','Peter','James','Oliver','Lucas','Liam','Daniel','Henry','William','Benjamin',
+            'Alexander','Jacob','Noah','Ethan','Mason','Logan','Aiden','Jackson','Sebastian','Owen',
+            'Ryan','David','Adrian','Tomas','Diego','Pablo','Mateo','Hugo','Marco','Andres',
+            'Carlos','Javier','Fernando','Felipe','Nicolas','Joaquin','Ignacio','Vincent','Anton','Maxime',
+            'Leo','Theo','Jules','Arthur','Hiroshi','Akira','Kenji','Takeshi','Ravi','Arjun'
         )
+        female_names = @(
+            'Sarah','Emma','Sophie','Charlotte','Ava','Olivia','Mia','Lucia','Isabella','Amelia',
+            'Harper','Evelyn','Abigail','Emily','Sofia','Avery','Ella','Madison','Scarlett','Victoria',
+            'Aria','Grace','Chloe','Camila','Penelope','Riley','Layla','Lillian','Nora','Zoe',
+            'Mila','Aurora','Hazel','Violet','Aubrey','Hannah','Lily','Addison','Eleanor','Stella',
+            'Natalie','Carmen','Marta','Elena','Yuki','Sakura','Aisha','Priya','Anya','Beatrice'
+        )
+        voice_male   = $VoiceMale
+        voice_female = $VoiceFemale
     } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $stateFile -Encoding UTF8
     Ok "Created voice-state.json"
 } else {

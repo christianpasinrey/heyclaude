@@ -13,11 +13,28 @@ param(
 $ErrorActionPreference = 'SilentlyContinue'
 
 $appHome    = Join-Path $env:USERPROFILE '.claude-voice'
+$claudeHome = Join-Path $env:USERPROFILE '.claude'
+$stateFile  = Join-Path $claudeHome 'voice-state.json'
 $piperExe   = Join-Path $appHome 'piper\piper\piper.exe'
-$voiceModel = Join-Path $appHome 'piper\voices\es_ES-davefx-medium.onnx'
+$voicesDir  = Join-Path $appHome 'piper\voices'
 $ttsFlag    = Join-Path $appHome 'tts-active.flag'
 $logFile    = Join-Path $env:TEMP "claude-voice-$SessionId.log"
 $wavTmp     = Join-Path $env:TEMP "claude-voice-$SessionId.wav"
+
+# Pick the voice for this session by looking up its gender in voice-state.
+# Falls back to a sensible default if state is missing (e.g. legacy installs).
+$voiceModel = Join-Path $voicesDir 'es_ES-davefx-medium.onnx'
+try {
+    $state = Get-Content -Raw -LiteralPath $stateFile -ErrorAction Stop | ConvertFrom-Json
+    $sess = $state.sessions | Where-Object { $_.id -eq $SessionId } | Select-Object -First 1
+    if ($sess) {
+        $slug = if ($sess.gender -eq 'F') { $state.voice_female } else { $state.voice_male }
+        if ($slug) {
+            $candidate = Join-Path $voicesDir "$slug.onnx"
+            if (Test-Path -LiteralPath $candidate) { $voiceModel = $candidate }
+        }
+    }
+} catch {}
 
 function Write-Log($msg) {
     "$([datetime]::Now.ToString('HH:mm:ss')) $msg" | Out-File -FilePath $logFile -Append -Encoding UTF8
