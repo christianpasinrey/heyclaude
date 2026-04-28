@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Removes Claude Voice from the current Windows account.
 

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     HeyClaude installer — graphical (WPF) wrapper that runs the same steps as
     install-cli.ps1 with live progress, a log pane and a single Install button.
@@ -159,10 +159,11 @@ $stepDefs = @(
     @{ Key = 'state';    Label = 'Initialize session state' },
     @{ Key = 'hooks';    Label = 'Wire up Claude Code hooks' }
 )
+$ICON_TODO = [string][char]0x25CB
 $stepsObs = New-Object System.Collections.ObjectModel.ObservableCollection[object]
 foreach ($s in $stepDefs) {
     $stepsObs.Add([pscustomobject]@{
-        Key = $s.Key; Label = $s.Label; Icon = '○'; Color = '#666'
+        Key = $s.Key; Label = $s.Label; Icon = $ICON_TODO; Color = '#666'
     })
 }
 $stepsList.ItemsSource = $stepsObs
@@ -204,22 +205,25 @@ function Run-Install {
     $total = $stepDefs.Count
     $done = 0
 
+    $script:ICON_RUN  = [string][char]0x25D0
+    $script:ICON_OK   = [string][char]0x2713
+    $script:ICON_FAIL = [string][char]0x2717
     function Bump($key) {
-        Set-Step $key '◐' '#dcdc6e'
+        Set-Step $key $script:ICON_RUN '#dcdc6e'
         $statusText.Text = "Working on: $((($stepsObs | Where-Object Key -eq $key).Label))"
         Pump-Ui
     }
     function Tick($key, [string]$msg = $null) {
         $script:done++
-        Set-Step $key '✓' '#4ec9b0'
+        Set-Step $key $script:ICON_OK '#4ec9b0'
         $progress.Value = [Math]::Min(100, [int](($script:done / $total) * 100))
-        if ($msg) { Append-Log "  ✓ $msg" }
+        if ($msg) { Append-Log ("  " + $script:ICON_OK + " " + $msg) }
         Pump-Ui
     }
     function Bomb($key, [string]$err) {
-        Set-Step $key '✗' '#f14c4c'
+        Set-Step $key $script:ICON_FAIL '#f14c4c'
         $statusText.Text = 'Failed.'
-        Append-Log "  ✗ $err"
+        Append-Log ("  " + $script:ICON_FAIL + " " + $err)
         $closeBtn.IsEnabled = $true
         throw $err
     }

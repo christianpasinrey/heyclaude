@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Installs Claude Voice on Windows.
 
@@ -28,13 +28,15 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+$ICON_OK   = [string][char]0x2713
+$ICON_FAIL = [string][char]0x2717
 function Info($m)  { Write-Host "  $m" -ForegroundColor Cyan }
-function Ok($m)    { Write-Host "✓ $m" -ForegroundColor Green }
+function Ok($m)    { Write-Host ($ICON_OK + ' ' + $m) -ForegroundColor Green }
 function Warn($m)  { Write-Host "! $m" -ForegroundColor Yellow }
-function Fail($m)  { Write-Host "✗ $m" -ForegroundColor Red; exit 1 }
+function Fail($m)  { Write-Host ($ICON_FAIL + ' ' + $m) -ForegroundColor Red; exit 1 }
 
 Write-Host ""
-Write-Host "== Claude Voice installer ==" -ForegroundColor Cyan
+Write-Host "== HeyClaude installer ==" -ForegroundColor Cyan
 Write-Host ""
 
 # ---- 1. Resolve Python ------------------------------------------------------
@@ -206,7 +208,7 @@ Write-Host ""
 Write-Host "== Done ==" -ForegroundColor Green
 Write-Host ""
 Write-Host "Open a NEW Claude Code session. You should hear a greeting and the"
-Write-Host "Claude Voice dashboard window will appear (UAC prompt the first time —"
+Write-Host "HeyClaude dashboard window will appear (UAC prompt the first time -"
 Write-Host "it asks for elevation so the daemon can inject text into other"
 Write-Host "elevated Claude Code windows). Hold F12 to talk, or just say"
 Write-Host "'Claude, ...'."
