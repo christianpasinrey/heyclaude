@@ -1,0 +1,11 @@
+faster-whisper>=1.0.3,<2
+sounddevice>=0.4.6,<1
+numpy>=1.26,<3
+pynput>=1.7.6,<2
+pyperclip>=1.8,<2
+pywin32>=306
+torch>=2.0,<3
+silero-vad>=6,<7
+nvidia-cublas-cu12
+nvidia-cudnn-cu12
+nvidia-cuda-nvrtc-cu12
