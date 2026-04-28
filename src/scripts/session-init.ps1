@@ -34,7 +34,7 @@ $DefaultFemaleNames = @(
     'Natalie','Carmen','Marta','Elena','Yuki','Sakura','Aisha','Priya','Anya','Beatrice'
 )
 $DefaultVoiceMale   = 'es_ES-davefx-medium'
-$DefaultVoiceFemale = 'es_ES-mls_10246-low'
+$DefaultVoiceFemale = 'es_MX-claude-high'
 
 # Walk up the process tree to capture:
 #   $ClaudePid    -> claude.exe / node.exe (the agent process)

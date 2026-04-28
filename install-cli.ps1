@@ -23,7 +23,7 @@
 param(
     [string]$PiperVersion = '2023.11.14-2',
     [string]$VoiceMale   = 'es_ES-davefx-medium',
-    [string]$VoiceFemale = 'es_ES-mls_10246-low',
+    [string]$VoiceFemale = 'es_MX-claude-high',
     [switch]$NoStyleHook
 )
 
