@@ -57,7 +57,7 @@ Source: "uninstall.ps1";        DestDir: "{app}"; Flags: ignoreversion
 Source: "requirements.txt";     DestDir: "{app}"; Flags: ignoreversion
 Source: "README.md";            DestDir: "{app}"; Flags: ignoreversion
 Source: "LICENSE";              DestDir: "{app}"; Flags: ignoreversion
-Source: "src\voice_input\*";    DestDir: "{app}\src\voice_input"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "src\voice_input\*";    DestDir: "{app}\src\voice_input"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "__pycache__,*.pyc"
 Source: "src\scripts\*";        DestDir: "{app}\src\scripts";     Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Run]
