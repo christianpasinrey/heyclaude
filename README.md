@@ -1,6 +1,8 @@
-# Claude Voice
+# HeyClaude
 
-Voice control for [Claude Code](https://docs.claude.com/claude-code) on Windows. Talk to multiple Claude sessions, hear their answers, route by name — all 100 % local.
+> Voice control for [Claude Code](https://docs.claude.com/claude-code) on Windows.
+
+Talk to multiple Claude sessions, hear their answers, route by name — all 100 % local. No keys, no cloud, no usage caps.
 
 - **TTS streaming**: each Claude response is read aloud as it appears in the transcript, not only at the end of the turn. Voice via [Piper](https://github.com/rhasspy/piper) (`es_ES-davefx-medium` by default).
 - **STT push-to-talk**: hold **F12** while you speak; release to transcribe with [faster-whisper](https://github.com/SYSTRAN/faster-whisper) on your GPU and inject the text into the active Claude window.
@@ -19,8 +21,8 @@ Voice control for [Claude Code](https://docs.claude.com/claude-code) on Windows.
 ## Install
 
 ```powershell
-git clone https://github.com/<you>/claude-voice.git
-cd claude-voice
+git clone https://github.com/christianpasinrey/heyclaude.git
+cd heyclaude
 .\install.ps1
 ```
 
