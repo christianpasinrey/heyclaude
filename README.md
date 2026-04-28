@@ -20,12 +20,26 @@ Talk to multiple Claude sessions, hear their answers, route by name — all 100 
 
 ## Install
 
+The fastest path is the prebuilt installer attached to each [release](https://github.com/christianpasinrey/heyclaude/releases) — download `HeyClaude-Setup-x.y.z.exe`, double-click, follow the wizard.
+
+If you'd rather run it from source:
+
 ```powershell
 git clone https://github.com/christianpasinrey/heyclaude.git
 cd heyclaude
-.\install.ps1            # graphical installer
+.\install.ps1            # graphical installer (PowerShell + WPF)
 # .\install.ps1 -Cli     # text-only mode (good for CI / scripted setups)
 ```
+
+### Building the .exe yourself
+
+The installer is generated with [Inno Setup 6](https://jrsoftware.org/isdl.php). After installing it:
+
+```powershell
+& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+```
+
+The signed-or-not `.exe` lands in `dist\`.
 
 The installer:
 
