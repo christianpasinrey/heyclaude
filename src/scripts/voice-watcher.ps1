@@ -13,7 +13,7 @@ param(
 $ErrorActionPreference = 'SilentlyContinue'
 
 $appHome    = Join-Path $env:USERPROFILE '.claude-voice'
-$piperExe   = Join-Path $appHome 'piper\piper.exe'
+$piperExe   = Join-Path $appHome 'piper\piper\piper.exe'
 $voiceModel = Join-Path $appHome 'piper\voices\es_ES-davefx-medium.onnx'
 $ttsFlag    = Join-Path $appHome 'tts-active.flag'
 $logFile    = Join-Path $env:TEMP "claude-voice-$SessionId.log"

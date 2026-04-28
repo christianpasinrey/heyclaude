@@ -15,7 +15,7 @@ $ErrorActionPreference = 'SilentlyContinue'
 $claudeHome = Join-Path $env:USERPROFILE '.claude'
 $appHome    = Join-Path $env:USERPROFILE '.claude-voice'
 $stateFile  = Join-Path $claudeHome 'voice-state.json'
-$piperExe   = Join-Path $appHome 'piper\piper.exe'
+$piperExe   = Join-Path $appHome 'piper\piper\piper.exe'
 $voiceModel = Join-Path $appHome 'piper\voices\es_ES-davefx-medium.onnx'
 $ttsFlag    = Join-Path $appHome 'tts-active.flag'
 
